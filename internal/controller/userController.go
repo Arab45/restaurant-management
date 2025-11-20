@@ -31,3 +31,19 @@ func DeleteUser( c *gin.Context) {
 		"result": "Delete User",
 	})
 }
+
+func signUp() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"result": "Sign Up",
+		})
+	}
+}
+
+func logIn() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"result": "Log In",
+		})
+	}
+}

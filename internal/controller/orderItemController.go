@@ -1,6 +1,9 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 func CreateOrderItem( c *gin.Context) {
 	c.JSON(200, gin.H{
@@ -9,17 +12,24 @@ func CreateOrderItem( c *gin.Context) {
 
 }
 
-func GetOrderItem( c *gin.Context) {
+func GetOrderItemByOrder() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Get Order Item",
 	})
-	
+}
 }
 
-func GetOrderItems( c *gin.Context) {
+func GetOrderItems() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Get Order Items",
 	})	
+	}
+}
+
+func ItemByOrder( id string) (OrderItem []primitive.M, error error) {
+	return OrderItem, error
 }
 
 func UpdateOrderItem( c *gin.Context) {
