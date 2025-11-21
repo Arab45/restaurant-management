@@ -34,16 +34,18 @@ func ItemByOrder( id string) (OrderItem []primitive.M, error error) {
 	return OrderItem, error
 }
 
-func UpdateOrderItem( c *gin.Context) {
-	c.JSON(200, gin.H{
+func UpdateOrderItem() gin.HandlerFunc {
+	return func (c *gin.Context) {c.JSON(200, gin.H{
 		"result": "Update Order Item",
 	})
+	}
 	
 }
 
-func DeleteOrderItem( c *gin.Context) {
-	c.JSON(200, gin.H{
+func DeleteOrderItem() gin.HnadlerFunc {
+	return func (c *gin.Context) {c.JSON(200, gin.H{
 		"result": "Delete Order Item",
 	})
+}
 	
 }
