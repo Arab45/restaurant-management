@@ -5,10 +5,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateOrderItem( c *gin.Context) {
-	c.JSON(200, gin.H{
-		"result": "Create Order Item",
-	})
+func CreateOrderItem() gin.HandlerFunc {
+	return func(c *gin.Context){
+		c.JSON(200, gin.H{
+			"result": "Create Order Item",
+		})
+	}
 
 }
 
