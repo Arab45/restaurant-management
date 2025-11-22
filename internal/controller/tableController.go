@@ -27,8 +27,10 @@ func UpdateTable( c *gin.Context) {
 	})
 }
 
-func DeleteTable( c *gin.Context) {
+func DeleteTable() gin.HandlerFunc {
+	return func(c *gin.Context){
 	c.JSON(200, gin.H{
 		"result": "Delete Table",
-	})			
+	})	
+}		
 }

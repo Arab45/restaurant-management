@@ -5,9 +5,9 @@ import(
 )
 
 func OrderItemRouter(incomingRouter *gin.Engine) {
-	incomingRouter.POST("/orderItem", controller.CreateOrderItem)
-	incomingRouter.GET("/orderItems", controller.GetOrderItems)
-	incomingRouter.GET("/orderItem/:id", controller.GetOrderItemByOrder)
-	incomingRouter.PUT("/orderItem/:id", controller.UpdateOrderItem)
-	incomingRouter.DELETE("/orderItem/:id", controller.DeleteOrderItem)
+	incomingRouter.POST("/orderItem", controller.CreateOrderItem())
+	incomingRouter.GET("/orderItems", controller.GetOrderItems())
+	incomingRouter.GET("/orderItem/:id", controller.GetOrderItemByOrder())
+	incomingRouter.PUT("/orderItem/:id", controller.UpdateOrderItem())
+	incomingRouter.DELETE("/orderItem/:id", controller.DeleteOrderItem())
 }
