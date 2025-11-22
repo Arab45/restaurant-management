@@ -26,10 +26,12 @@ func GetTables() gin.HandlerFunc {
 }
 }
 
-func UpdateTable( c *gin.Context) {
+func UpdateTable() gin.HandlerFunc {
+	return func(c *gin.Context){
 	c.JSON(200, gin.H{
 		"result": "Update Table",
 	})
+}
 }
 
 func DeleteTable() gin.HandlerFunc {

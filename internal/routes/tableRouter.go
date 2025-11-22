@@ -6,9 +6,9 @@ import(
 )
 
 func TableRouter(incomingRouter *gin.Engine) {
-	incomingRouter.POST("/table", controller.CreateTable)
-	incomingRouter.GET("/tables", controller.GetTables)
-	incomingRouter.GET("/table/:id", controller.GetTable)
-	incomingRouter.PUT("/table/:id", controller.UpdateTable)
-	incomingRouter.DELETE("/table/:id", controller.DeleteTable)
+	incomingRouter.POST("/table", controller.CreateTable())
+	incomingRouter.GET("/tables", controller.GetTables())
+	incomingRouter.GET("/table/:id", controller.GetTable())
+	incomingRouter.PUT("/table/:id", controller.UpdateTable())
+	incomingRouter.DELETE("/table/:id", controller.DeleteTable())
 }
