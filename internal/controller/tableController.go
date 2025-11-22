@@ -2,23 +2,28 @@ package controller
 
 import "github.com/gin-gonic/gin"
 
-func CreateTable( c *gin.Context) {
+func CreateTable() gin.HandlerFunc {
+	return func(c *gin.Context){
 	c.JSON(200, gin.H{
 		"result": "Create Table",
 	})
 }
+}
 
-func GetTable( c *gin.Context) {
+func GetTable() gin.HandlerFunc {
+	return func(c *gin.Context){
 	c.JSON(200, gin.H{
 		"result": "Get Table",
 	})
 }
+}
 
-func GetTables( c *gin.Context) {
+func GetTables() gin.HandlerFunc {
+	return func(c *gin.Context){
 	c.JSON(200, gin.H{
 		"result": "Get Tables",
 	})
-	
+}
 }
 
 func UpdateTable( c *gin.Context) {
