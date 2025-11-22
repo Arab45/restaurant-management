@@ -6,9 +6,9 @@ import(
 )
 
 func MenuRouter(incomingRouter *gin.Engine) {
-	incomingRouter.POST("/menu", controller.CreateMenu)
-	incomingRouter.GET("/menus", controller.GetMenus)
-	incomingRouter.GET("/menu/:id", controller.GetMenu)
-	incomingRouter.PUT("/menu/:id", controller.UpdateMenu)
-	incomingRouter.DELETE("/menu/:id", controller.DeleteMenu)
+	incomingRouter.POST("/menu", controller.CreateMenu())
+	incomingRouter.GET("/menus", controller.GetMenus())
+	incomingRouter.GET("/menu/:id", controller.GetMenu())
+	incomingRouter.PUT("/menu/:id", controller.UpdateMenu())
+	incomingRouter.DELETE("/menu/:id", controller.DeleteMenu())
 }

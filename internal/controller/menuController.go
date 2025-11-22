@@ -4,38 +4,42 @@ import(
 	"github.com/gin-gonic/gin"
 )
 
-func CreateMenu(c *gin.Context) {
+func CreateMenu() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Create Menu",
 	})
-
+	}
 }
 
-func GetMenus(c *gin.Context) {
+func GetMenus() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Get Menus",
 	})
-
+	}
 }
 
-func GetMenu(c *gin.Context) {
+func GetMenu() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Get Menu",
 	})
-
+	}
 }
 
-func UpdateMenu(c *gin.Context) {
+func UpdateMenu() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Update Menu",
 	})
-
+	}
 }
 
-func DeleteMenu(c *gin.Context) {
-
+func DeleteMenu() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Delete Menu",
 	})
-
+	}
 }
