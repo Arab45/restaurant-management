@@ -39,10 +39,12 @@ func GetFoods() gin.HandlerFunc {
 }
 }
 
-func UpdateFood( ) {
+func UpdateFood( ) gin.HandlerFunc{
+	return func(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Update Food",
 	})
+}
 }
 
 func DeleteFood( c *gin.Context) {

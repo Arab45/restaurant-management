@@ -42,7 +42,7 @@ func UpdateOrderItem() gin.HandlerFunc {
 	
 }
 
-func DeleteOrderItem() gin.HnadlerFunc {
+func DeleteOrderItem() gin.HandlerFunc {
 	return func (c *gin.Context) {c.JSON(200, gin.H{
 		"result": "Delete Order Item",
 	})
