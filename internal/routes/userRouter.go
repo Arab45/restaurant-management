@@ -6,9 +6,9 @@ import(
 )
 
 func UserRouter(incomingRouter *gin.Engine) {
-	incomingRouter.POST("/user", controller.CreateUser)
-	incomingRouter.GET("/users", controller.GetUsers)
-	incomingRouter.GET("/user/:id", controller.GetUser)
-	incomingRouter.PUT("/user/:id", controller.UpdateUser)
-	incomingRouter.DELETE("/user/:id", controller.DeleteUser)
+	incomingRouter.POST("/user", controller.SignUp())
+	incomingRouter.GET("/users", controller.GetUsers())
+	incomingRouter.GET("/user/:id", controller.GetUser())
+	incomingRouter.PUT("/user/:id", controller.UpdateUser())
+	incomingRouter.DELETE("/user/:id", controller.LogIn())
 }
