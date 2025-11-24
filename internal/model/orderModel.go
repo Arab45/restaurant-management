@@ -1,12 +1,16 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type OrderModel struct {
-	ID         primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	UserID     int `bson:"user_id" json:"user_id"`
-	TableID    int 	`bson:"table_id" json:"table_id"`
-	FoodItems  []int `bson:"food_items" json:"food_items"`
-	TotalPrice float64 `bson:"total_price" json:"total_price"`
-	Status     string `bson:"status" json:"status"`
+	ID         primitive.ObjectID `bson:"_id"`
+	Order_Date *time.Time         `json:"order_date" validate:"required"`
+	Created_at time.Time          `json:"created_at"`
+	Updated_at time.Time          `json:"updated_at"`
+	Order_id   string             `json:"order_id"`
+	Table_id   *string            `json:"table_id" validate:"required"`
 }
