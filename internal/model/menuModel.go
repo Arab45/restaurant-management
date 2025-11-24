@@ -12,7 +12,7 @@ type Menu struct {
 	Category   string             `json:"category" validation:"required"`
 	Start_date *time.Time         `json:"start_date"`
 	End_date   *time.Time         `json:"end_date"`
-	Create_at  time.Time          `json:"create_at"`
-	Update_at  time.Time          `json:"update_at"`
+	Created_at time.Time          `json:"created_at"`
+	Updated_at time.Time          `json:"updated_at"`
 	Menu_id    time.Time          `json:"menu_id"`
 }

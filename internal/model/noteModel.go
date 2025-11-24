@@ -1,9 +1,16 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type NoteModel struct {
-	ID      primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Content string `bson:"content" json:"content"`
-	UserID  int `bson:"user_id" json:"user_id"`
+	ID         primitive.ObjectID `bson:"_id"`
+	Text       string             `json:"text"`
+	Title      string             `json:"title"`
+	Created_at time.Time          `json:"created_at"`
+	Updated_at time.Time          `json:"updated_at"`
+	Note_id    string             `json:"note_id"`
 }
