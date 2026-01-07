@@ -81,6 +81,10 @@ func GetMenu() gin.HandlerFunc {
 	}
 }
 
+func inTimespam(start, end, check time.Time) bool {
+	return start.After(time.Now()) && end.Before(time.Now())
+}
+
 
 
 func UpdateMenu() gin.HandlerFunc {
@@ -97,7 +101,7 @@ func UpdateMenu() gin.HandlerFunc {
 		var updateObj primitive.D
 
 		if menu.Start_date != nil && menu.End_date != nil {
-			if !inTimespam(*menu.Start_date, *menu.End_date) {
+			if !inTimespam(*menu.Start_date, *menu.End_date, time.Now()) {
 				msg := "Kindly retype the time"
 				c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 				defer cancel()
