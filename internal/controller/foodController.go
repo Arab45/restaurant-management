@@ -75,7 +75,7 @@ func GetFood() gin.HandlerFunc {
 	  foodId := c.Param("food_id")
 	  var food model.FoodModel
 
-	  err := foodCollection.FindOne(ctx, bson.M("food_id", foodId)).Decode(&food)
+	  err := foodCollection.FindOne(ctx, bson.M{"food_id", foodId}).Decode(&food)
 	  defer cancel()
 	  if err != nil {
 		c.JSON(
