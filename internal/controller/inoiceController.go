@@ -4,9 +4,7 @@ import "github.com/gin-gonic/gin"
 
 func CreateInvoice() gin.HandlerFunc {
 	return func(c *gin.Context){
-	c.JSON(200, gin.H{
-		"result": "Create Invoice",
-	})
+		var ctx, cancel = context.WithTimeout()
 }
 }
 
