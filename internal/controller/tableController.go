@@ -1,8 +1,24 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"context"
+	"fmt"
+	"RESTAURANT-MANAGEMENT/internal/database"
+	"RESTAURANT-MANAGEMENT/internal/model"
+	"log"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson/options"
+	"github.com/go-playground/validator/v10"
+)
 
 var tableCollection *mongo.Collection = database.OpenCollection(database.Client, "table")
+var validate = validator.New()
+
 
 func CreateTable() gin.HandlerFunc {
 	return func(c *gin.Context){

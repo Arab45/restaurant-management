@@ -1,8 +1,18 @@
 package controller
 
 import (
+	"context"
+	"fmt"
+	"RESTAURANT-MANAGEMENT/internal/database"
+	"RESTAURANT-MANAGEMENT/internal/model"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson/options"
 )
 
 type OrderItemPack struct {
@@ -11,6 +21,7 @@ type OrderItemPack struct {
 }
 
 var OrderItemCollection *mongo.Collection = database.OpenCollection(database.Client, "orderItem")
+var validate = validator.New()
 
 
 func CreateOrderItem() gin.HandlerFunc {
