@@ -89,15 +89,16 @@ func GetUser() gin.HandlerFunc {
 
 func UpdateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"result": "Update User",
-	})	
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+
 	}
 }
 
 
 func SignUp() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+
 //convert the JSON data coming from postman to something that golang understand
 
 //validate the data based on user struct
