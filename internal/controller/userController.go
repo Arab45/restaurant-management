@@ -121,6 +121,8 @@ func SignUp() gin.HandlerFunc {
 
 func LogIn() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+
 //convert the login data from postman which is in JSON to golang readable format
 
 //find a user with that email and see if that user exists
