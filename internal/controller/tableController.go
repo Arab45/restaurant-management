@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/bson/options"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"github.com/go-playground/validator/v10"
 )
 
