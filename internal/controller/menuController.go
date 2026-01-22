@@ -17,16 +17,17 @@ import (
 )
 
 var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
-var validate = validator.New()
 
 func CreateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 		var menu model.MenuModel
-		if err := c.BindJSON(&menu); err != nil{
+		if err := c.BindJSON(&menu); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
 
+		validate := validator.New()
 		validationErr := validate.Struct(menu)
 		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
@@ -67,25 +68,23 @@ func GetMenus() gin.HandlerFunc {
 func GetMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 		menuId := c.Param("menu_id")
 		var menu model.MenuModel
 
-		err := menuCollection.FindOne(ctx, bson.M("menu_id", menuId)).Decode(&menu)
+		err := menuCollection.FindOne(ctx, bson.M{"menu_id": menuId}).Decode(&menu)
 
-		defer cancel()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Menu not found"})
 			return
 		}
-			c.JSON(http.StatusOK, menu)
+		c.JSON(http.StatusOK, menu)
 	}
 }
 
 func inTimespam(start, end, check time.Time) bool {
 	return start.After(time.Now()) && end.Before(time.Now())
 }
-
-
 
 func UpdateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -96,7 +95,7 @@ func UpdateMenu() gin.HandlerFunc {
 		}
 
 		menuId := c.Param("menu_id")
-		filter := bson.M{"menu_id": menuId} 
+		filter := bson.M{"menu_id": menuId}
 
 		var updateObj primitive.D
 
@@ -106,12 +105,11 @@ func UpdateMenu() gin.HandlerFunc {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 				defer cancel()
 				return
+			}
 		}
-		}
-		
 
-		updateObj = append(updateObj, bson.E{ Key: "start_date", Value: menu.Start_date})
-		updateObj = append(updateObj, bson.E{ Key: "end_date", Value: menu.End_date})
+		updateObj = append(updateObj, bson.E{Key: "start_date", Value: menu.Start_date})
+		updateObj = append(updateObj, bson.E{Key: "end_date", Value: menu.End_date})
 		if menu.Name != "" {
 			updateObj = append(updateObj, bson.E{Key: "name", Value: menu.Name})
 		}
@@ -129,8 +127,7 @@ func UpdateMenu() gin.HandlerFunc {
 		result, err := menuCollection.UpdateOne(
 			ctx,
 			filter,
-			bson.D{{Key: "$set", Value: updateObj},
-			},
+			bson.D{{Key: "$set", Value: updateObj}},
 			&opt,
 		)
 

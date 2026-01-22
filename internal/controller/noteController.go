@@ -15,18 +15,18 @@ import (
 )
 
 var noteCollection *mongo.Collection = database.OpenCollection(database.Client, "note")
-var validate = validator.New()
 
 func CreateNote() gin.HandlerFunc {
-	return func(c *gin.Context){
+	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		var note model.NoteModel
-		if err := c.BindJSON(&note); err != nil{
+		if err := c.BindJSON(&note); err != nil {
 			c.JSON(
 				http.StatusBadRequest, gin.H{"error": err.Error()},
 			)
 		}
 
+		validate := validator.New()
 		validationErr := validate.Struct(note)
 		if validationErr != nil {
 			c.JSON(
@@ -48,11 +48,11 @@ func CreateNote() gin.HandlerFunc {
 			)
 		}
 		c.JSON(http.StatusOK, result)
-}
+	}
 }
 
 func GetNotes() gin.HandlerFunc {
-	return func( c *gin.Context){
+	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		result, err := noteCollection.Find(ctx, bson.M{})
 		defer cancel()
@@ -70,11 +70,11 @@ func GetNotes() gin.HandlerFunc {
 			)
 		}
 		c.JSON(http.StatusOK, allNotes)
-}
+	}
 }
 
 func GetNote() gin.HandlerFunc {
-	return func( c *gin.Context){
+	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		noteId := c.Param("note_id")
 		var note model.NoteModel
@@ -88,21 +88,21 @@ func GetNote() gin.HandlerFunc {
 			)
 		}
 		c.JSON(http.StatusOK, note)
-}
+	}
 }
 
 func UpdateNote() gin.HandlerFunc {
-	return func (c *gin.Context) {
-	c.JSON(200, gin.H{
-		"result": "Update Note",
-	})
-}
+	return func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"result": "Update Note",
+		})
+	}
 }
 
 func DeleteNote() gin.HandlerFunc {
-	return func (c *gin.Context) {
-	c.JSON(200, gin.H{
-		"result": "Delete Note",
-	})
-}
+	return func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"result": "Delete Note",
+		})
+	}
 }

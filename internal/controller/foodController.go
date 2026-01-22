@@ -33,7 +33,7 @@ func CreateFood() gin.HandlerFunc {
 			)
 			return
 		}
-		validationErr := Validate.Struct(food)
+		validationErr := validate.Struct(food)
 
 		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
@@ -110,31 +110,29 @@ func GetFoods() gin.HandlerFunc {
 			Value: bson.D{},
 		}}
 
-groupStage := bson.D{{
-	Key: "$group",
-	Value: bson.D{
-		{Key: "_id", Value: nil},
-		{Key: "total_count", Value: bson.D{
-			{Key: "$sum", Value: 1},
-		}},
-		{Key: "data", Value: bson.D{
-			{Key: "$push", Value: "$$ROOT"},
-		}},
-	},
-}}
+		groupStage := bson.D{{
+			Key: "$group",
+			Value: bson.D{
+				{Key: "_id", Value: nil},
+				{Key: "total_count", Value: bson.D{
+					{Key: "$sum", Value: 1},
+				}},
+				{Key: "data", Value: bson.D{
+					{Key: "$push", Value: "$$ROOT"},
+				}},
+			},
+		}}
 
-
-projectStage := bson.D{{
-	Key: "$project",
-	Value: bson.D{
-		{Key: "_id", Value: 0},
-		{Key: "total_count", Value: 1},
-		{Key: "food_items", Value: bson.D{
-			{Key: "$slice", Value: []interface{}{"$data", startIndex, recordPerPage}},
-		}},
-	},
-}}
-
+		projectStage := bson.D{{
+			Key: "$project",
+			Value: bson.D{
+				{Key: "_id", Value: 0},
+				{Key: "total_count", Value: 1},
+				{Key: "food_items", Value: bson.D{
+					{Key: "$slice", Value: []interface{}{"$data", startIndex, recordPerPage}},
+				}},
+			},
+		}}
 
 		result, err := foodCollection.Aggregate(ctx, mongo.Pipeline{
 			matchStage,
@@ -256,7 +254,6 @@ func UpdateFood() gin.HandlerFunc {
 		c.JSON(http.StatusOK, res)
 	}
 }
-
 
 func DeleteFood(c *gin.Context) {
 	c.JSON(200, gin.H{

@@ -1,30 +1,31 @@
 package controller
 
 import (
-	"context"
-	"fmt"
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/model"
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"github.com/go-playground/validator/v10"
 )
 
-var oderCollection *mongo.Collection = database,OpenCollection(database.Client, "order")
+var oderCollection *mongo.Collection = database.OpenCollection(database.Client, "order")
 var validate = validator.New()
 
 func CreateOrder() gin.HandlerFunc {
 	return func(c *gin.Context){
-		var err, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		
-		var table models.Menu 
-		var order models.Order 
+		var table model.MenuModel 
+		var order model.OrderModel 
 
 		if err := c.BindJSON(&order); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -49,7 +50,7 @@ func CreateOrder() gin.HandlerFunc {
 		}
 
 		order.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		order.updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		order.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 
 		order.ID = primitive.NewObjectID()
 		order.Order_id = order.ID.Hex()
@@ -69,12 +70,12 @@ func CreateOrder() gin.HandlerFunc {
 
 func GetOrder() gin.HandlerFunc {
 	return func(c *gin.Context){
-		var err, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 		orderId := c.Param("order_id")
 		var order model.OrderModel
 
-		err := orderCollection.FindOne(ctx, bson.M{"order_id", orderId}).Decode(&order)
-		defer cancel()
+		err := orderCollection.FindOne(ctx, bson.M{"order_id": orderId}).Decode(&order)
 		if err != nil{
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occure while fetching the order item"})
 		}
@@ -85,9 +86,9 @@ func GetOrder() gin.HandlerFunc {
 
 func GetOrders() gin.HandlerFunc {
 	return func(c *gin.Context){
-	var err, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
-		orderCollection.Find(context.TODO(), bson.M{})
+		result, err := orderCollection.Find(ctx, bson.M{})
 		defer cancel()
 		if err != nil{
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occured while listening order items"})
@@ -104,9 +105,9 @@ func GetOrders() gin.HandlerFunc {
 
 func UpdateOrder() gin.HandlerFunc {
 	return func(c *gin.Context){
-		var ctx, cancel = context,WithTimeout(context.Background(), 100*time.second)
-		var table models.Table 
-		var order models.Order 
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var table model.TableModel 
+		var order model.OrderModel 
 
 		var updatedObj primitive.D 
 
@@ -118,32 +119,32 @@ func UpdateOrder() gin.HandlerFunc {
 		}
 
 		if order.Table_id != nil {
-			err := menuCollection.FindOne(ctx, bson.M{"table_id", food.Table_id}).Decode(&table)
+			err := menuCollection.FindOne(ctx, bson.M{"table_id": order.Table_id}).Decode(&table)
 			defer cancel()
 			if err != nil{
 				msg := fmt.Sprintf("message: Menu was not found")
-				c.JSON(http.StatusInternalServerError, g.H{"error": msg})
+				c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			}
-			updatedObj = append(updatedObj, bson.E{"menu", order.Table_id})
+			updatedObj = append(updatedObj, bson.E{ Key: "menu", Value : order.Table_id})
 		}
 
-		order.Update_at = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339));
-		updateObj = append(updateObj, bson.E("update_at", food.Updated_at));
+		order.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339));
+		updatedObj = append(updatedObj, bson.E{ Key: "updated_at", Value: order.Updated_at});
 
-		upsert := true
+		// upsert := true
 
-		filter := bson.M{"order_id", orderId}
-		opt := options.UpdateOptions{
-			Upsert: &upsert
-		}
+		filter := bson.M{"order_id": orderId}
+		opt := options.Update().SetUpsert(true)
 
 		result, err := orderCollection.UpdateOne(
-			ctx, filter, bson.D{{"$set", updatedObj}},
-			&opt
+			ctx, 
+			filter, 
+			bson.D{{ Key: "$set", Value: updatedObj}},
+			opt,
 		)
 
 		if err != nil{
-			mesg := fmt.Sprintf("order item update failed")
+			msg := fmt.Sprintf("order item update failed")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -162,11 +163,12 @@ func DeleteOrder() gin.HandlerFunc {
 }
 }
 
-func orderItemOrderCreator(order model.Order)string{
+func orderItemOrderCreator(order model.OrderModel)string{
+	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 			order.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		order.updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		order.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 
-		order.ID = primitive.NewObjectID
+		order.ID = primitive.NewObjectID()
 		order.Order_id = order.ID.Hex()
 
 		orderCollection.InsertOne(ctx, order)

@@ -21,7 +21,6 @@ type OrderItemPack struct {
 }
 
 var OrderItemCollection *mongo.Collection = database.OpenCollection(database.Client, "orderItem")
-var validate = validator.New()
 
 
 func CreateOrderItem() gin.HandlerFunc {
