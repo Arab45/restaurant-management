@@ -1,19 +1,20 @@
 package controller
 
 import (
-	"context"
-	"fmt"
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/model"
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"github.com/go-playground/validator/v10"
 )
 
 var tableCollection *mongo.Collection = database.OpenCollection(database.Client, "table")
@@ -21,15 +22,16 @@ var tableCollection *mongo.Collection = database.OpenCollection(database.Client,
 
 func CreateTable() gin.HandlerFunc {
 	return func(c *gin.Context){
-		var err, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
-		var table models.Table 
+		var table model.TableModel 
 
 		if err := c.BindJSON(&table); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
+		validate := validator.New()
 		validationErr := validate.Struct(table)
 
 		if validationErr != nil {
@@ -37,34 +39,33 @@ func CreateTable() gin.HandlerFunc {
 			return
 		}
 
-		table.Created_at = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		table.Updated_at = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		table.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		table.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 
 		table.ID = primitive.NewObjectID()
-		table.Order_id = table.ID.Hex()
-
+		table.Table_id = table.ID.Hex()
 		result, insertErr := tableCollection.InsertOne(ctx, table)
 
 		if insertErr != nil {
-			msg: fmt.Sprintf("Table item was not created")
-			c.JSON(http.StatusInternalServerError. gin.H{"error": msg})
+			msg:= fmt.Sprintf("Table item was not created")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
 		defer cancel()
 
-		c,JSON(http.StatusOK, result)
+		c.JSON(http.StatusOK, result)
 
 }
 }
 
 func GetTable() gin.HandlerFunc {
 	return func(c *gin.Context){
-		var err, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-		tableId := c.Param("table_id")
-		var table model.Table
-
-		err := tableCollection.FindOne(ctx, bson.M{"table_id", tableId}).Decode(&table)
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		tableId := c.Param("table_id")
+		var table model.TableModel
+
+		err := tableCollection.FindOne(ctx, bson.M{"table_id": tableId}).Decode(&table)
 		if err != nil{
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occure while fetching the tables"})
 		}
@@ -75,7 +76,7 @@ func GetTable() gin.HandlerFunc {
 
 func GetTables() gin.HandlerFunc {
 	return func(c *gin.Context){
-		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
 		result, err  := tableCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
@@ -85,53 +86,50 @@ func GetTables() gin.HandlerFunc {
 		}
 
 		var allTables []bson.M 
-		if err != result.All(ctx, &allTables); err != nil{
+		if err = result.All(ctx, &allTables); err != nil{
 			log.Fatal(err)
 		}
-		c.JSON(http.StatusOk, allTables)
+		c.JSON(http.StatusOK, allTables)
 }
 }
 
 func UpdateTable() gin.HandlerFunc {
-	return func(c *gin.Context){
-		var err, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+	return func(c *gin.Context){	
+		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 
-		var table models.Table 
+		var table model.TableModel
 
 		tableId := c.Param("table_id")
 
 		if err := c.BindJSON(&table); err != nil {
-			c.JSON(http.StatusBadRequest. gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		var updatedObj primitive.D  
 
 		if table.Number_of_guests != nil {
-			updatedObj = append(updateObj, bson.E{"number_of_guests", table.Number_of_guests})
+			updatedObj = append(updatedObj, bson.E{ Key : "number_of_guests", Value:  table.Number_of_guests})
 		}
 
 		if table.Table_number != nil {
-			updatedObj = append(updateObj, bson.E{"table_number", table.Table_number})
-
+			updatedObj = append(updatedObj, bson.E{ Key : "table_number", Value:  table.Table_number})
 		}
 
-		table.Updated_at = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		table.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 
-		upsert := true
-		opt := option.UpdateOptios{
-			Upsert: &upsert
-		}
+		opt := options.Update().SetUpsert(true)
 
 		filter := bson.M{"table_id": tableId}
 
 		result, err := tableCollection.UpdateOne(
 			ctx,
 			filter,
-			bson.D{
-				{"$set", updatedObj}
-			},
-			&opt
+			bson.D{{ 
+				Key: "$set", 
+				Value: updatedObj,
+			}},
+			opt,
 		)
 
 		if err != nil {
