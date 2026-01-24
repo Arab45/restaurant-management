@@ -15,12 +15,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var tableCollection = database.Collection("tables")
 
 func CreateTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var tableCollection = database.Collection("tables")
 
 		var table model.TableModel
 
@@ -60,6 +60,7 @@ func GetTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var tableCollection = database.Collection("tables")
 		tableId := c.Param("table_id")
 		var table model.TableModel
 
@@ -75,6 +76,7 @@ func GetTable() gin.HandlerFunc {
 func GetTables() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var tableCollection = database.Collection("tables")
 
 		result, err := tableCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
@@ -95,6 +97,7 @@ func UpdateTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var tableCollection = database.Collection("tables")
 
 		var table model.TableModel
 

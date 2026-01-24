@@ -26,13 +26,14 @@ type InvoiceViewFormat struct {
 	Order_details    interface{}
 }
 
-var invoiceCollection = database.Collection("invoices")
 
 func CreateInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+       var orderCollection = database.Collection("orders")
+       var invoiceCollection = database.Collection("invoices")
 		var invoice model.InvoiceModel
 
 		if err := c.BindJSON(&invoice); err != nil {
@@ -85,6 +86,7 @@ func GetInvoice() gin.HandlerFunc {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		invoiceId := c.Param("invoice_id")
 
+        var invoiceCollection = database.Collection("invoices")
 		var invoice model.InvoiceModel
 
 		err := invoiceCollection.FindOne(ctx, bson.M{"invoice_id": invoiceId}).Decode(&invoice)
@@ -118,7 +120,7 @@ func GetInvoice() gin.HandlerFunc {
 func GetInvoices() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-
+        var invoiceCollection = database.Collection("invoices")
 		result, err := invoiceCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
 
@@ -138,7 +140,7 @@ func UpdateInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-
+        var invoiceCollection = database.Collection("invoices")
 		var invoice model.InvoiceModel
 		invoiceId := c.Param("invoice_id")
 

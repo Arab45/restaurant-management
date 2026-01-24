@@ -1,7 +1,11 @@
 package main 
 
 import (
-	"os";
+	"os"
+	"context"
+	"time"
+
+
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"RESTAURANT-MANAGEMENT/internal/routes"
@@ -12,14 +16,14 @@ import (
 var foodCollection *mongo.Collection
 
 func main () {
+	var ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	    // LOAD .env FILE
 	    godotenv.Load()
 
 	    // CONNECT DATABASE FIRST
-		database.ConnectDB()
+		database.ConnectMongo(ctx)
 
-		// INITIALIZE COLLECTION
-		foodCollection = database.OpenCollection(database.Client, "food")
 		
 	port := os.Getenv("PORT") 
 

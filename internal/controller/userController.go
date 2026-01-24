@@ -17,12 +17,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var userCollection = database.Collection("users")
 
 func GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var userCollection = database.Collection("users")
 
 		recordPerPage, err := strconv.Atoi(c.Query("recordPerPage"))
 		if err != nil || recordPerPage < 1 {
@@ -72,6 +72,7 @@ func GetUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var userCollection = database.Collection("users")
 
 		userId := c.Param("user_id")
 		var user model.UserModel
@@ -97,6 +98,7 @@ func SignUp() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var userCollection = database.Collection("users")
 		var user model.UserModel
 
 		//convert the JSON data coming from postman to something that golang understand
@@ -179,6 +181,8 @@ func SignUp() gin.HandlerFunc {
 func LogIn() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
+		var userCollection = database.Collection("users")
 		var user model.UserModel
 		var foundUser model.UserModel
 

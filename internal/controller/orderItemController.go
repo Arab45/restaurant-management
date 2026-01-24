@@ -20,12 +20,12 @@ type OrderItemPack struct {
 	Order_item []model.OrderItemModel
 }
 
-var OrderItemCollection = database.Collection("orderItems")
 
 func CreateOrderItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		 var OrderItemCollection = database.Collection("order_items")
 		var orderItemPack OrderItemPack
 
 		var order model.OrderModel
@@ -88,6 +88,7 @@ func GetOrderItems() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		 var OrderItemCollection = database.Collection("order_items")
 
 		result, err := OrderItemCollection.Find(context.TODO(), bson.M{})
 
@@ -210,6 +211,7 @@ func GetOrderItems() gin.HandlerFunc {
 func ItemByOrder(id string) (orderItems []bson.M, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
+	var OrderItemCollection = database.Collection("order_items")
 
 	matchStage := bson.D{
 		{Key: "$match", Value: bson.D{{Key: "order_id", Value: id}}},
@@ -325,6 +327,7 @@ func UpdateOrderItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		 var OrderItemCollection = database.Collection("order_items")
 
 		var orderItem model.OrderItemModel
 
@@ -377,6 +380,7 @@ func GetOrderItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		 var OrderItemCollection = database.Collection("order_items")
 
 		orderItemId := c.Param("order_item_id")
 		var orderItem model.OrderItemModel

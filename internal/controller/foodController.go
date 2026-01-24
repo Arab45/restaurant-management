@@ -17,13 +17,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var foodCollection = database.Collection("foods")
 var Validate = validator.New()
 
 func CreateFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+        var menuCollection = database.Collection("menus")
+		var foodCollection = database.Collection("foods")
 		var food model.FoodModel
 		var menu model.MenuModel
 
@@ -73,6 +74,7 @@ func CreateFood() gin.HandlerFunc {
 func GetFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var foodCollection = database.Collection("foods")
 		foodId := c.Param("food_id")
 		var food model.FoodModel
 
@@ -92,6 +94,7 @@ func GetFoods() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+		var foodCollection = database.Collection("foods")
 		// Pagination
 		recordPerPage, err := strconv.Atoi(c.DefaultQuery("recordPerPage", "10"))
 		if err != nil || recordPerPage < 1 {
@@ -171,6 +174,8 @@ func UpdateFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var foodCollection = database.Collection("foods")
+        var menuCollection = database.Collection("menus")
 
 		var menu model.MenuModel
 		var food model.FoodModel

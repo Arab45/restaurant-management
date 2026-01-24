@@ -15,7 +15,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var orderCollection = database.Collection("orders")
 var validate = validator.New()
 
 func CreateOrder() gin.HandlerFunc {
@@ -23,6 +22,8 @@ func CreateOrder() gin.HandlerFunc {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+        var orderCollection = database.Collection("orders")
+		var tableCollection = database.Collection("tables")
 		var table model.MenuModel
 		var order model.OrderModel
 
@@ -71,6 +72,7 @@ func GetOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+        var orderCollection = database.Collection("orders")
 		orderId := c.Param("order_id")
 		var order model.OrderModel
 
@@ -86,7 +88,7 @@ func GetOrder() gin.HandlerFunc {
 func GetOrders() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-
+        var orderCollection = database.Collection("orders")
 		result, err := orderCollection.Find(ctx, bson.M{})
 		defer cancel()
 		if err != nil {
@@ -106,6 +108,8 @@ func UpdateOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+        var orderCollection = database.Collection("orders")
+        var menuCollection = database.Collection("menus")
 		var table model.TableModel
 		var order model.OrderModel
 
@@ -165,6 +169,7 @@ func DeleteOrder() gin.HandlerFunc {
 
 func orderItemOrderCreator(order model.OrderModel) string {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+    var orderCollection = database.Collection("orders")
 	order.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	order.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 

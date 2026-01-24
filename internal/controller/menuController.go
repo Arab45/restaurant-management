@@ -15,12 +15,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var menuCollection = database.Collection("menus")
 
 func CreateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+        var menuCollection = database.Collection("menus")
 		var menu model.MenuModel
 		if err := c.BindJSON(&menu); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -51,6 +51,7 @@ func CreateMenu() gin.HandlerFunc {
 func GetMenus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var _, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var menuCollection = database.Collection("menus")
 		result, err := menuCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
 		if err != nil {
@@ -68,6 +69,7 @@ func GetMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var menuCollection = database.Collection("menus")
 		menuId := c.Param("menu_id")
 		var menu model.MenuModel
 
@@ -89,6 +91,7 @@ func UpdateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+		var menuCollection = database.Collection("menus")
 		var menu model.MenuModel
 		if err := c.BindJSON(&menu); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

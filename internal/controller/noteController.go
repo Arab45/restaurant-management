@@ -13,11 +13,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var noteCollection = database.Collection("notes")
 
 func CreateNote() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+        var noteCollection = database.Collection("notes")
 		var note model.NoteModel
 		if err := c.BindJSON(&note); err != nil {
 			c.JSON(
@@ -53,6 +53,7 @@ func CreateNote() gin.HandlerFunc {
 func GetNotes() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+        var noteCollection = database.Collection("notes")
 		result, err := noteCollection.Find(ctx, bson.M{})
 		defer cancel()
 		if err != nil {
@@ -75,6 +76,7 @@ func GetNotes() gin.HandlerFunc {
 func GetNote() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+        var noteCollection = database.Collection("notes")
 		noteId := c.Param("note_id")
 		var note model.NoteModel
 

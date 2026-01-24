@@ -20,7 +20,6 @@ type SignedDetails struct{
 	jwt.StandardClaims
 }
 
-var userCollection = database.Collection("users")
 
 func GenerateAllToken( email string, firstName string, lastName string, uid string)(signedToken string, signedRefreshToken string, err error){
 	claims := &SignedDetails{
@@ -54,6 +53,8 @@ func GenerateAllToken( email string, firstName string, lastName string, uid stri
 func UpdateAllTokens(signedToken, signedRefreshToken, userId string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
+    var userCollection = database.Collection("users")
+
 
 	updateObj := bson.D{
 		{Key: "token", Value: signedToken},
