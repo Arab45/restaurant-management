@@ -2,14 +2,15 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	 
+	"RESTAURANT-MANAGEMENT/internal/helper"
+	"net/http"	 
 )
 
 func AuthMiddleware() gin.HandlerFunc{
 	return func (c *gin.Context){
-		clientToken := c.Request.Header.get("token")
+		clientToken := c.Request.Header.Get("token")
 		if clientToken == ""{
-			c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("No Authorization header provided")})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "No Authorization header provided"})
 			c.Abort()
 			return
 		}

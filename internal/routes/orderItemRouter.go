@@ -9,5 +9,5 @@ func OrderItemRouter(incomingRouter *gin.Engine) {
 	incomingRouter.GET("/orderItems", controller.GetOrderItems())
 	incomingRouter.GET("/orderItem/:id", controller.GetOrderItemByOrder())
 	incomingRouter.PUT("/orderItem/:id", controller.UpdateOrderItem())
-	incomingRouter.DELETE("/orderItem/:id", controller.DeleteOrderItem())
+	// incomingRouter.DELETE("/orderItem/:id", controller.DeleteOrderItem())
 }

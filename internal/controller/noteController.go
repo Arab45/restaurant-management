@@ -11,10 +11,9 @@ import (
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var noteCollection *mongo.Collection = database.OpenCollection(database.Client, "note")
+var noteCollection = database.Collection("notes")
 
 func CreateNote() gin.HandlerFunc {
 	return func(c *gin.Context) {

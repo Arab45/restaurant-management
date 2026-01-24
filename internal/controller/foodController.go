@@ -4,7 +4,6 @@ import (
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/model"
 	"context"
-	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -18,12 +17,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var foodCollection *mongo.Collection = database.OpenCollection(database.Client, "food")
+var foodCollection = database.Collection("foods")
 var Validate = validator.New()
 
 func CreateFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 		var food model.FoodModel
 		var menu model.MenuModel
 
@@ -43,7 +43,7 @@ func CreateFood() gin.HandlerFunc {
 		err := menuCollection.FindOne(ctx, bson.M{"menu_id": food.Menu_id}).Decode(&menu)
 
 		if err != nil {
-			msg := fmt.Sprintf("menu was not found")
+			msg := "menu was not found"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -58,7 +58,7 @@ func CreateFood() gin.HandlerFunc {
 		result, insertErr := foodCollection.InsertOne(ctx, food)
 
 		if insertErr != nil {
-			msg := fmt.Sprintf("food item was not created")
+			msg := "food item was not created"
 			c.JSON(
 				http.StatusInternalServerError, gin.H{"error": msg},
 			)

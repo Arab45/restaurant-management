@@ -4,7 +4,6 @@ import (
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/model"
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -13,18 +12,17 @@ import (
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var tableCollection *mongo.Collection = database.OpenCollection(database.Client, "table")
-
+var tableCollection = database.Collection("tables")
 
 func CreateTable() gin.HandlerFunc {
-	return func(c *gin.Context){
+	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 
-		var table model.TableModel 
+		var table model.TableModel
 
 		if err := c.BindJSON(&table); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -47,7 +45,7 @@ func CreateTable() gin.HandlerFunc {
 		result, insertErr := tableCollection.InsertOne(ctx, table)
 
 		if insertErr != nil {
-			msg:= fmt.Sprintf("Table item was not created")
+			msg := "Table item was not created"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -55,47 +53,48 @@ func CreateTable() gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, result)
 
-}
+	}
 }
 
 func GetTable() gin.HandlerFunc {
-	return func(c *gin.Context){
+	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 		tableId := c.Param("table_id")
 		var table model.TableModel
 
 		err := tableCollection.FindOne(ctx, bson.M{"table_id": tableId}).Decode(&table)
-		if err != nil{
+		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occure while fetching the tables"})
 		}
 
 		c.JSON(http.StatusOK, table)
-}
+	}
 }
 
 func GetTables() gin.HandlerFunc {
-	return func(c *gin.Context){
+	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
-		result, err  := tableCollection.Find(context.TODO(), bson.M{})
+		result, err := tableCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
 
-		if err != nil{
+		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occur"})
 		}
 
-		var allTables []bson.M 
-		if err = result.All(ctx, &allTables); err != nil{
+		var allTables []bson.M
+		if err = result.All(ctx, &allTables); err != nil {
 			log.Fatal(err)
 		}
 		c.JSON(http.StatusOK, allTables)
-}
+	}
 }
 
 func UpdateTable() gin.HandlerFunc {
-	return func(c *gin.Context){	
+	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 
 		var table model.TableModel
 
@@ -103,17 +102,16 @@ func UpdateTable() gin.HandlerFunc {
 
 		if err := c.BindJSON(&table); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
 		}
 
-		var updatedObj primitive.D  
+		var updatedObj primitive.D
 
 		if table.Number_of_guests != nil {
-			updatedObj = append(updatedObj, bson.E{ Key : "number_of_guests", Value:  table.Number_of_guests})
+			updatedObj = append(updatedObj, bson.E{Key: "number_of_guests", Value: table.Number_of_guests})
 		}
 
 		if table.Table_number != nil {
-			updatedObj = append(updatedObj, bson.E{ Key : "table_number", Value:  table.Table_number})
+			updatedObj = append(updatedObj, bson.E{Key: "table_number", Value: table.Table_number})
 		}
 
 		table.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
@@ -125,15 +123,15 @@ func UpdateTable() gin.HandlerFunc {
 		result, err := tableCollection.UpdateOne(
 			ctx,
 			filter,
-			bson.D{{ 
-				Key: "$set", 
+			bson.D{{
+				Key:   "$set",
 				Value: updatedObj,
 			}},
 			opt,
 		)
 
 		if err != nil {
-			msg := fmt.Sprintf("table item update failed")
+			msg := "table item update failed"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -141,13 +139,13 @@ func UpdateTable() gin.HandlerFunc {
 		defer cancel()
 		c.JSON(http.StatusOK, result)
 
-}
+	}
 }
 
 func DeleteTable() gin.HandlerFunc {
-	return func(c *gin.Context){
-	c.JSON(200, gin.H{
-		"result": "Delete Table",
-	})	
-}		
+	return func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"result": "Delete Table",
+		})
+	}
 }

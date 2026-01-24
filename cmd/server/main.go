@@ -6,11 +6,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"RESTAURANT-MANAGEMENT/internal/routes"
 	"RESTAURANT-MANAGEMENT/internal/database"
+	"github.com/joho/godotenv"
 )
 
 var foodCollection *mongo.Collection
 
 func main () {
+	    // LOAD .env FILE
+	    godotenv.Load()
 
 	    // CONNECT DATABASE FIRST
 		database.ConnectDB()

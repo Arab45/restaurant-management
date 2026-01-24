@@ -10,5 +10,5 @@ func MenuRouter(incomingRouter *gin.Engine) {
 	incomingRouter.GET("/menus", controller.GetMenus())
 	incomingRouter.GET("/menu/:id", controller.GetMenu())
 	incomingRouter.PUT("/menu/:id", controller.UpdateMenu())
-	incomingRouter.DELETE("/menu/:id", controller.DeleteMenu())
+	// incomingRouter.DELETE("/menu/:id", controller.DeleteMenu())
 }

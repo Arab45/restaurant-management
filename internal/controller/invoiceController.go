@@ -4,7 +4,6 @@ import (
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/model"
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -13,7 +12,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -28,12 +26,12 @@ type InvoiceViewFormat struct {
 	Order_details    interface{}
 }
 
-var invoiceCollection *mongo.Collection = database.OpenCollection(database.Client, "invoice")
-var orderCollection *mongo.Collection = database.OpenCollection(database.Client, "order")
+var invoiceCollection = database.Collection("invoices")
 
 func CreateInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 
 		var invoice model.InvoiceModel
 
@@ -48,7 +46,7 @@ func CreateInvoice() gin.HandlerFunc {
 		defer cancel()
 
 		if err != nil {
-			msg := fmt.Sprintf("message: Order was not found")
+			msg := "message: Order was not found"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 		}
 
@@ -73,7 +71,7 @@ func CreateInvoice() gin.HandlerFunc {
 		result, err := invoiceCollection.InsertOne(ctx, invoice)
 
 		if err != nil {
-			msg := fmt.Sprintf("invoice item was not created")
+			msg := "invoice item was not created"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -108,7 +106,7 @@ func GetInvoice() gin.HandlerFunc {
 		}
 
 		invoiceView.Invoice_id = invoice.Invoice_id
-		invoiceView.Payment_status = *&invoice.Payment_status
+		invoiceView.Payment_status = invoice.Payment_status
 		invoiceView.Payment_due = allOrderItem[0]["payment_due"]
 		invoiceView.Table_number = allOrderItem[0]["table_number"]
 		invoiceView.Order_details = allOrderItem[0]["order_items"]
@@ -139,6 +137,7 @@ func GetInvoices() gin.HandlerFunc {
 func UpdateInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 
 		var invoice model.InvoiceModel
 		invoiceId := c.Param("invoice_id")
@@ -183,7 +182,7 @@ func UpdateInvoice() gin.HandlerFunc {
 		)
 
 		if err != nil {
-			msg := fmt.Sprintf("invoice item update filed")
+			msg := "invoice item update filed"
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 		}
 
