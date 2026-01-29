@@ -1,0 +1,89 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "RESTAURANT MANAGEMENT API",
+    "version": "1.0.0",
+    "description": "OpenAPI spec for the Restaurant Management API (auto-expanded)."
+  },
+  "servers": [
+    { "url": "http://localhost:8080", "description": "Local server" }
+  ],
+  "paths": {
+    "/food": {
+      "post": {
+        "summary": "Create a food",
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/FoodCreate"}}}},
+        "responses": {"201": {"description": "Created"}}
+      }
+    },
+    "/foods": {
+      "get": {"summary": "List foods","responses": {"200": {"description": "A list of foods","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/Food"}}}}}}}
+    ,
+    "/food/{id}": {
+      "parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],
+      "get": {"summary": "Get food by ID","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/Food"}}}}}},
+      "put": {"summary": "Update food","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/FoodCreate"}}}},"responses": {"200": {"description": "Updated"}}}
+    },
+
+    "/user": {"post": {"summary": "Sign up user","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/UserCreate"}}}},"responses": {"201": {"description": "Created"}}}},
+    "/users": {"get": {"summary": "List users","responses": {"200": {"description": "A list of users","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/User"}}}}}}}},
+    "/user/{id}": {"parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],"get": {"summary": "Get user","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/User"}}}}}},"put": {"summary": "Update user","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/UserCreate"}}}},"responses": {"200": {"description": "Updated"}}},"delete": {"summary": "Delete user","responses": {"204": {"description": "Deleted"}}}}
+    ,
+
+    "/order": {"post": {"summary": "Create an order","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/OrderCreate"}}}},"responses": {"201": {"description": "Created"}}}},
+    "/orders": {"get": {"summary": "List orders","responses": {"200": {"description": "A list of orders","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/Order"}}}}}}}},
+    "/order/{id}": {"parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],"get": {"summary": "Get order","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/Order"}}}}}},"put": {"summary": "Update order","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/OrderCreate"}}}},"responses": {"200": {"description": "Updated"}}},"delete": {"summary": "Delete order","responses": {"204": {"description": "Deleted"}}}}
+    ,
+
+    "/orderItem": {"post": {"summary": "Create order item","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/OrderItemCreate"}}}},"responses": {"201": {"description": "Created"}}}},
+    "/orderItems": {"get": {"summary": "List order items","responses": {"200": {"description": "A list of order items","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/OrderItem"}}}}}}}},
+    "/orderItem/{id}": {"parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],"get": {"summary": "Get order item by order","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/OrderItem"}}}}}},"put": {"summary": "Update order item","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/OrderItemCreate"}}}},"responses": {"200": {"description": "Updated"}}}}
+    ,
+
+    "/menu": {"post": {"summary": "Create menu","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/MenuCreate"}}}},"responses": {"201": {"description": "Created"}}}},
+    "/menus": {"get": {"summary": "List menus","responses": {"200": {"description": "A list of menus","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/Menu"}}}}}}}},
+    "/menu/{id}": {"parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],"get": {"summary": "Get menu","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/Menu"}}}}}},"put": {"summary": "Update menu","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/MenuCreate"}}}},"responses": {"200": {"description": "Updated"}}}}
+    ,
+
+    "/table": {"post": {"summary": "Create table","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/TableCreate"}}}},"responses": {"201": {"description": "Created"}}}},
+    "/tables": {"get": {"summary": "List tables","responses": {"200": {"description": "A list of tables","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/Table"}}}}}}}},
+    "/table/{id}": {"parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],"get": {"summary": "Get table","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/Table"}}}}}},"put": {"summary": "Update table","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/TableCreate"}}}},"responses": {"200": {"description": "Updated"}}},"delete": {"summary": "Delete table","responses": {"204": {"description": "Deleted"}}}}
+    ,
+
+    "/invoice": {"post": {"summary": "Create invoice","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/InvoiceCreate"}}}},"responses": {"201": {"description": "Created"}}}},
+    "/invoices": {"get": {"summary": "List invoices","responses": {"200": {"description": "A list of invoices","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/Invoice"}}}}}}}},
+    "/invoice/{id}": {"parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],"get": {"summary": "Get invoice","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/Invoice"}}}}}},"put": {"summary": "Update invoice","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/InvoiceCreate"}}}},"responses": {"200": {"description": "Updated"}}},"delete": {"summary": "Delete invoice","responses": {"204": {"description": "Deleted"}}}}
+    ,
+
+    "/note": {"post": {"summary": "Create note","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/NoteCreate"}}}},"responses": {"201": {"description": "Created"}}}},
+    "/notes": {"get": {"summary": "List notes","responses": {"200": {"description": "A list of notes","content": {"application/json": {"schema": {"type": "array","items": {"$ref": "#/components/schemas/Note"}}}}}}}},
+    "/note/{id}": {"parameters": [{"name": "id","in": "path","required": true,"schema": {"type": "string"}}],"get": {"summary": "Get note","responses": {"200": {"description": "OK","content": {"application/json": {"schema": {"$ref": "#/components/schemas/Note"}}}}}},"put": {"summary": "Update note","requestBody": {"required": true,"content": {"application/json": {"schema": {"$ref": "#/components/schemas/NoteCreate"}}}},"responses": {"200": {"description": "Updated"}}},"delete": {"summary": "Delete note","responses": {"204": {"description": "Deleted"}}}}
+  },
+  "components": {
+    "schemas": {
+      "Food": {"type": "object","properties": {"id": {"type": "string"},"name": {"type": "string"},"price": {"type": "number","format": "float"},"menuId": {"type": "string"}}},
+      "FoodCreate": {"type": "object","required": ["name","price"],"properties": {"name": {"type": "string"},"price": {"type": "number","format": "float"},"menuId": {"type": "string"}}},
+
+      "User": {"type": "object","properties": {"id": {"type": "string"},"username": {"type": "string"},"email": {"type": "string"}}},
+      "UserCreate": {"type": "object","required": ["username","email"],"properties": {"username": {"type": "string"},"email": {"type": "string"},"password": {"type": "string"}}},
+
+      "Order": {"type": "object","properties": {"id": {"type": "string"},"tableId": {"type": "string"},"status": {"type": "string"}}},
+      "OrderCreate": {"type": "object","required": ["tableId"],"properties": {"tableId": {"type": "string"},"items": {"type": "array","items": {"$ref": "#/components/schemas/OrderItemCreate"}}}},
+
+      "OrderItem": {"type": "object","properties": {"id": {"type": "string"},"orderId": {"type": "string"},"foodId": {"type": "string"},"quantity": {"type": "integer"}}},
+      "OrderItemCreate": {"type": "object","required": ["orderId","foodId","quantity"],"properties": {"orderId": {"type": "string"},"foodId": {"type": "string"},"quantity": {"type": "integer"}}},
+
+      "Menu": {"type": "object","properties": {"id": {"type": "string"},"name": {"type": "string"}}},
+      "MenuCreate": {"type": "object","required": ["name"],"properties": {"name": {"type": "string"}}},
+
+      "Table": {"type": "object","properties": {"id": {"type": "string"},"number": {"type": "integer"},"seats": {"type": "integer"}}},
+      "TableCreate": {"type": "object","required": ["number"],"properties": {"number": {"type": "integer"},"seats": {"type": "integer"}}},
+
+      "Invoice": {"type": "object","properties": {"id": {"type": "string"},"orderId": {"type": "string"},"amount": {"type": "number","format": "float"}}},
+      "InvoiceCreate": {"type": "object","required": ["orderId","amount"],"properties": {"orderId": {"type": "string"},"amount": {"type": "number","format": "float"}}},
+
+      "Note": {"type": "object","properties": {"id": {"type": "string"},"text": {"type": "string"}}},
+      "NoteCreate": {"type": "object","required": ["text"],"properties": {"text": {"type": "string"}}}
+    }
+  }
+}}

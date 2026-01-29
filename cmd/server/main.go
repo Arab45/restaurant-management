@@ -1,31 +1,34 @@
-package main 
+package main
 
 import (
-	"os"
 	"context"
+	"os"
 	"time"
 
+	"RESTAURANT-MANAGEMENT/docs"
+	"RESTAURANT-MANAGEMENT/internal/config"
+	"RESTAURANT-MANAGEMENT/internal/database"
+	"RESTAURANT-MANAGEMENT/internal/routes"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
-	"RESTAURANT-MANAGEMENT/internal/routes"
-	"RESTAURANT-MANAGEMENT/internal/database"
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var foodCollection *mongo.Collection
 
-func main () {
+func main() {
+	// LOAD .env FILE
+	godotenv.Load()
+	
 	var ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	    // LOAD .env FILE
-	    godotenv.Load()
 
-	    // CONNECT DATABASE FIRST
-		database.ConnectMongo(ctx)
 
-		
-	port := os.Getenv("PORT") 
+	// CONNECT DATABASE FIRST
+	database.ConnectMongo(ctx)
+
+	port := os.Getenv("PORT")
 
 	if port == "" {
 		port = "8080"
@@ -33,6 +36,10 @@ func main () {
 
 	router := gin.New()
 	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
+	router.Group("/api/v1")
+	// REGISTER ROUTES
+
 	routes.UserRouter(router)
 	routes.FoodRouter(router)
 	routes.OrderRouter(router)
@@ -40,6 +47,11 @@ func main () {
 	routes.InvoiceRouter(router)
 	routes.OrderItemRouter(router)
 	routes.NoteRouter(router)
+
+	// Optionally register docs static handler
+	if config.DOCS_ENABLED {
+		docs.RegisterDocs(router)
+	}
 
 	router.Run(":" + port)
 }
