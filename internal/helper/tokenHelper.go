@@ -20,6 +20,9 @@ type SignedDetails struct {
 	jwt.StandardClaims
 }
 
+var SECRET_KEY = os.Getenv("JWT_SECRET_KEY")
+
+
 func GenerateAllToken(email string, firstName string, lastName string, uid string) (signedToken string, signedRefreshToken string, err error) {
 	claims := &SignedDetails{
 		Email:      email,
@@ -37,7 +40,6 @@ func GenerateAllToken(email string, firstName string, lastName string, uid strin
 		},
 	}
 
-	SECRET_KEY := os.Getenv("SECRET_KEY")
 
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
 	refreshToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaim).SignedString([]byte(SECRET_KEY))
@@ -78,7 +80,7 @@ func UpdateAllTokens(signedToken, signedRefreshToken, userId string) {
 }
 
 func ValidateToken(signedToken string) (*SignedDetails, string) {
-	SECRET_KEY := os.Getenv("SECRET_KEY")
+	// SECRET_KEY := os.Getenv("SECRET_KEY")
 
 	token, err := jwt.ParseWithClaims(
 		signedToken,

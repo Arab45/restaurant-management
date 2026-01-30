@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"RESTAURANT-MANAGEMENT/docs"
-	"RESTAURANT-MANAGEMENT/internal/config"
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/routes"
 
@@ -20,10 +19,9 @@ var foodCollection *mongo.Collection
 func main() {
 	// LOAD .env FILE
 	godotenv.Load()
-	
+
 	var ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
 
 	// CONNECT DATABASE FIRST
 	database.ConnectMongo(ctx)
@@ -39,19 +37,16 @@ func main() {
 	router.Use(gin.Recovery())
 	router.Group("/api/v1")
 	// REGISTER ROUTES
+	docs.RegisterDocs(router)
 
 	routes.UserRouter(router)
 	routes.FoodRouter(router)
+	routes.MenuRouter(router)
 	routes.OrderRouter(router)
 	routes.TableRouter(router)
 	routes.InvoiceRouter(router)
 	routes.OrderItemRouter(router)
 	routes.NoteRouter(router)
-
-	// Optionally register docs static handler
-	if config.DOCS_ENABLED {
-		docs.RegisterDocs(router)
-	}
 
 	router.Run(":" + port)
 }
