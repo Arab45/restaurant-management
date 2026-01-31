@@ -5,7 +5,7 @@ import(
 	controller"RESTAURANT-MANAGEMENT/internal/controller"
 )
 
-func TableRouter(incomingRouter *gin.Engine) {
+func TableRouter(incomingRouter *gin.RouterGroup){
 	incomingRouter.POST("/table", controller.CreateTable())
 	incomingRouter.GET("/tables", controller.GetTables())
 	incomingRouter.GET("/table/:id", controller.GetTable())

@@ -5,7 +5,7 @@ import(
 	controller"RESTAURANT-MANAGEMENT/internal/controller"
 )
 
-func UserRouter(incomingRouter *gin.Engine) {
+func UserRouter(incomingRouter *gin.RouterGroup){
 	incomingRouter.POST("/user", controller.SignUp())
 	incomingRouter.GET("/users", controller.GetUsers())
 	incomingRouter.GET("/user/:id", controller.GetUser())

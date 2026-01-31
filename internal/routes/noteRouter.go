@@ -5,7 +5,7 @@ import(
 	controller"RESTAURANT-MANAGEMENT/internal/controller"
 )
 
-func NoteRouter(incomingRouter *gin.Engine) {
+func NoteRouter(incomingRouter *gin.RouterGroup){
 	incomingRouter.POST("/note", controller.CreateNote())
 	incomingRouter.GET("/notes", controller.GetNotes())
 	incomingRouter.GET("/note/:id", controller.GetNote())

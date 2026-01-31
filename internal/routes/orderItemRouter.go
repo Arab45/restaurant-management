@@ -4,7 +4,7 @@ import(
 	controller"RESTAURANT-MANAGEMENT/internal/controller"
 )
 
-func OrderItemRouter(incomingRouter *gin.Engine) {
+func OrderItemRouter(incomingRouter *gin.RouterGroup){
 	incomingRouter.POST("/orderItem", controller.CreateOrderItem())
 	incomingRouter.GET("/orderItems", controller.GetOrderItems())
 	incomingRouter.GET("/orderItem/:id", controller.GetOrderItemByOrder())
