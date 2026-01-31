@@ -15,7 +15,7 @@ func FoodRouter(incomingRouter *gin.RouterGroup){
 // @Success      200 {object} mongo.InsertOneResult
 // @Failure      400 {object} map[string]string
 // @Failure      500 {object} map[string]string
-// @Router       /foods [post]
+// @Router       /api/v1/food [post]
 	incomingRouter.POST("/food", controller.CreateFood())
 	incomingRouter.GET("/foods", controller.GetFoods())
 	incomingRouter.GET("/food/:id", controller.GetFood())
