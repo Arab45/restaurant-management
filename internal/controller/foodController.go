@@ -19,13 +19,22 @@ import (
 
 var Validate = validator.New()
 
-
-
+// CreateFood godoc
+// @Summary      Create a new food item
+// @Description  Create a food item and attach it to a menu
+// @Tags         Foods
+// @Accept       json
+// @Produce      json
+// @Param        food body model.FoodModel true "Food payload"
+// @Success      200 {object} mongo.InsertOneResult
+// @Failure      400 {object} map[string]string
+// @Failure      500 {object} map[string]string
+// @Router       /food [post]
 func CreateFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-        var menuCollection = database.Collection("menus")
+		var menuCollection = database.Collection("menus")
 		var foodCollection = database.Collection("foods")
 		var food model.FoodModel
 		var menu model.MenuModel
@@ -177,7 +186,7 @@ func UpdateFood() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 		var foodCollection = database.Collection("foods")
-        var menuCollection = database.Collection("menus")
+		var menuCollection = database.Collection("menus")
 
 		var menu model.MenuModel
 		var food model.FoodModel
