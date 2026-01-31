@@ -18,10 +18,10 @@ func FoodRouter(incomingRouter *gin.RouterGroup) {
 	// @Success      200 {object} mongo.InsertOneResult
 	// @Failure      400 {object} map[string]string
 	// @Failure      500 {object} map[string]string
-	// @Router       /api/v1/food [post]
+	// @Router       /food [post]
 	incomingRouter.POST("/food", controller.CreateFood())
 
 	incomingRouter.GET("/foods", controller.GetFoods())
 	incomingRouter.GET("/food/:id", controller.GetFood())
-	incomingRouter.PUT("/food/:id", controller.UpdateFood())
+	incomingRouter.PUT("/food-update/:id", controller.UpdateFood())
 }
