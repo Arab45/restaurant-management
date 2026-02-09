@@ -12,9 +12,6 @@ import (
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"go.mongodb.org/mongo-driver/mongo"
-
-	_ "RESTAURANT-MANAGEMENT/docs"
 )
 
 // @title Restaurant Management API
@@ -25,10 +22,10 @@ import (
 // @contact.url http://www.swagger.io/support
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:8080
+// @host localhost:3000
 // @BasePath /api/v1
 
-var foodCollection *mongo.Collection
+// var foodCollection *mongo.Collection
 
 func main() {
 	// LOAD .env FILE
