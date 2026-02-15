@@ -5,8 +5,10 @@ import (
 	"os"
 	"time"
 
+	"RESTAURANT-MANAGEMENT/docs" // Import without underscore to use
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/routes"
+	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -17,15 +19,8 @@ import (
 // @title Restaurant Management API
 // @version 1.0
 // @description Restaurant Management System API
-// @termsOfService http://swagger.io/terms/
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @host localhost:3000
 // @BasePath /api/v1
-
-// var foodCollection *mongo.Collection
 
 func main() {
 	// LOAD .env FILE
@@ -38,7 +33,6 @@ func main() {
 	database.ConnectMongo(ctx)
 
 	port := os.Getenv("PORT")
-
 	if port == "" {
 		port = "8080"
 	}
@@ -47,8 +41,32 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	// Swagger endpoint
-	router.GET("/swagger/restaurant-management/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	//CORS CONFIG
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{
+			"http://localhost:5173",
+		},
+		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{
+			"Origin",
+			"Content-Type",
+			"Authorization",
+		},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
+	// Programmatically set Swagger info
+	docs.SwaggerInfo.Host = "localhost:3000"
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.Schemes = []string{"http"}
+	docs.SwaggerInfo.Title = "Restaurant Management API"
+	docs.SwaggerInfo.Description = "Restaurant Management System API"
+	docs.SwaggerInfo.Version = "1.0"
+
+	// Swagger UI - This uses the embedded swagger.json automatically!
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// API ROUTES (with auth)
 	apiGroup := router.Group("/api/v1")

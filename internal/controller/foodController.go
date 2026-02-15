@@ -29,7 +29,7 @@ var Validate = validator.New()
 // @Produce json
 // @Param food body model.FoodModel true "Food data"
 // @Success 201 {object} model.FoodModel
-// @Router /foods [post]
+// @Router /food [post]
 func CreateFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
