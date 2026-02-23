@@ -13,11 +13,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-
+// CreateNote godoc
+// @Summary Create a new note
+// @Description Create a new note with title and text content
+// @Tags Note
+// @Accept json
+// @Produce json
+// @Param note body model.NoteModel true "Note data (title and text required)"
+// @Success 200 {object} map[string]interface{} "Note created successfully"
+// @Failure 400 {object} map[string]string "Bad request - validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /note [post]
 func CreateNote() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
-        var noteCollection = database.Collection("notes")
+		var noteCollection = database.Collection("notes")
 		var note model.NoteModel
 		if err := c.BindJSON(&note); err != nil {
 			c.JSON(
@@ -50,10 +60,18 @@ func CreateNote() gin.HandlerFunc {
 	}
 }
 
+// GetNotes godoc
+// @Summary Get all notes
+// @Description Retrieve a list of all notes
+// @Tags Note
+// @Produce json
+// @Success 200 {object} []model.NoteModel "List of notes"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /notes [get]
 func GetNotes() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
-        var noteCollection = database.Collection("notes")
+		var noteCollection = database.Collection("notes")
 		result, err := noteCollection.Find(ctx, bson.M{})
 		defer cancel()
 		if err != nil {
@@ -73,10 +91,19 @@ func GetNotes() gin.HandlerFunc {
 	}
 }
 
+// GetNote godoc
+// @Summary Get a specific note
+// @Description Retrieve note details by note ID
+// @Tags Note
+// @Produce json
+// @Param id path string true "Note ID"
+// @Success 200 {object} model.NoteModel "Note details"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /note/{id} [get]
 func GetNote() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
-        var noteCollection = database.Collection("notes")
+		var noteCollection = database.Collection("notes")
 		noteId := c.Param("note_id")
 		var note model.NoteModel
 
@@ -92,6 +119,18 @@ func GetNote() gin.HandlerFunc {
 	}
 }
 
+// UpdateNote godoc
+// @Summary Update a note
+// @Description Update note details by note ID
+// @Tags Note
+// @Accept json
+// @Produce json
+// @Param id path string true "Note ID"
+// @Param note body model.NoteModel true "Updated note data"
+// @Success 200 {object} map[string]interface{} "Note updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /note/{id} [put]
 func UpdateNote() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -100,6 +139,15 @@ func UpdateNote() gin.HandlerFunc {
 	}
 }
 
+// DeleteNote godoc
+// @Summary Delete a note
+// @Description Delete a note by note ID
+// @Tags Note
+// @Produce json
+// @Param id path string true "Note ID"
+// @Success 200 {object} map[string]string "Note deleted successfully"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /note/{id} [delete]
 func DeleteNote() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{

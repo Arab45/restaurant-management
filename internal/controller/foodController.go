@@ -19,8 +19,6 @@ import (
 
 var Validate = validator.New()
 
-
-
 // CreateFood godoc
 // @Summary Create a new food item
 // @Description Create a food item in the restaurant system
@@ -100,6 +98,15 @@ func GetFood() gin.HandlerFunc {
 	}
 }
 
+// GetFood godoc
+// @Summary Get a specific food item
+// @Description Retrieve a food item by its ID
+// @Tags Food
+// @Produce json
+// @Param id path string true "Food ID"
+// @Success 200 {object} model.FoodModel "Food details"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /food/{id} [get]
 func GetFoods() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -181,6 +188,16 @@ func GetFoods() gin.HandlerFunc {
 	}
 }
 
+// GetFoods godoc
+// @Summary Get all food items with pagination
+// @Description Retrieve a paginated list of all food items
+// @Tags Food
+// @Produce json
+// @Param recordPerPage query int false "Number of records per page (default: 10)"
+// @Param page query int false "Page number (default: 1)"
+// @Success 200 {object} map[string]interface{} "List of food items with pagination"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /foods [get]
 func UpdateFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -271,6 +288,19 @@ func UpdateFood() gin.HandlerFunc {
 	}
 }
 
+// UpdateFood godoc
+// @Summary Update a food item
+// @Description Update food item details by ID
+// @Tags Food
+// @Accept json
+// @Produce json
+// @Param id path string true "Food ID"
+// @Param food body model.FoodModel true "Updated food data"
+// @Success 200 {object} map[string]interface{} "Food updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 404 {object} map[string]string "Food not found"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /food-update/{id} [put]
 func DeleteFood(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": "Delete Food",

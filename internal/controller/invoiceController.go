@@ -26,14 +26,24 @@ type InvoiceViewFormat struct {
 	Order_details    interface{}
 }
 
-
+// CreateInvoice godoc
+// @Summary Create a new invoice
+// @Description Create a new invoice for an order with payment status and method
+// @Tags Invoice
+// @Accept json
+// @Produce json
+// @Param invoice body model.InvoiceModel true "Invoice data (order_id required)"
+// @Success 200 {object} map[string]interface{} "Invoice created successfully"
+// @Failure 400 {object} map[string]string "Bad request - validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /invoice [post]
 func CreateInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
-       var orderCollection = database.Collection("orders")
-       var invoiceCollection = database.Collection("invoices")
+		var orderCollection = database.Collection("orders")
+		var invoiceCollection = database.Collection("invoices")
 		var invoice model.InvoiceModel
 
 		if err := c.BindJSON(&invoice); err != nil {
@@ -81,12 +91,21 @@ func CreateInvoice() gin.HandlerFunc {
 	}
 }
 
+// GetInvoice godoc
+// @Summary Get a specific invoice
+// @Description Retrieve invoice details with order items by invoice ID
+// @Tags Invoice
+// @Produce json
+// @Param id path string true "Invoice ID"
+// @Success 200 {object} InvoiceViewFormat "Invoice details with order information"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /invoice/{id} [get]
 func GetInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		invoiceId := c.Param("invoice_id")
 
-        var invoiceCollection = database.Collection("invoices")
+		var invoiceCollection = database.Collection("invoices")
 		var invoice model.InvoiceModel
 
 		err := invoiceCollection.FindOne(ctx, bson.M{"invoice_id": invoiceId}).Decode(&invoice)
@@ -117,10 +136,18 @@ func GetInvoice() gin.HandlerFunc {
 	}
 }
 
+// GetInvoices godoc
+// @Summary Get all invoices
+// @Description Retrieve a list of all invoices
+// @Tags Invoice
+// @Produce json
+// @Success 200 {object} []model.InvoiceModel "List of invoices"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /invoices [get]
 func GetInvoices() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-        var invoiceCollection = database.Collection("invoices")
+		var invoiceCollection = database.Collection("invoices")
 		result, err := invoiceCollection.Find(context.TODO(), bson.M{})
 		defer cancel()
 
@@ -136,11 +163,23 @@ func GetInvoices() gin.HandlerFunc {
 	}
 }
 
+// UpdateInvoice godoc
+// @Summary Update an invoice
+// @Description Update invoice payment status and payment method by invoice ID
+// @Tags Invoice
+// @Accept json
+// @Produce json
+// @Param id path string true "Invoice ID"
+// @Param invoice body model.InvoiceModel true "Updated invoice data (payment_method and payment_status)"
+// @Success 200 {object} map[string]interface{} "Invoice updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /invoice/{id} [put]
 func UpdateInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-        var invoiceCollection = database.Collection("invoices")
+		var invoiceCollection = database.Collection("invoices")
 		var invoice model.InvoiceModel
 		invoiceId := c.Param("invoice_id")
 
@@ -165,7 +204,6 @@ func UpdateInvoice() gin.HandlerFunc {
 		invoice.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		updatedObj = append(updatedObj, bson.E{Key: "updated_at", Value: invoice.Updated_at})
 
-		// upsert := true
 		opt := options.Update().SetUpsert(true)
 
 		status := "PENDING"
@@ -193,6 +231,15 @@ func UpdateInvoice() gin.HandlerFunc {
 	}
 }
 
+// DeleteInvoice godoc
+// @Summary Delete an invoice
+// @Description Delete an invoice by invoice ID
+// @Tags Invoice
+// @Produce json
+// @Param id path string true "Invoice ID"
+// @Success 200 {object} map[string]string "Invoice deleted successfully"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /invoice/{id} [delete]
 func DeleteInvoice() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{

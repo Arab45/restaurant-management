@@ -15,7 +15,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-
+// CreateTable godoc
+// @Summary Create a new table
+// @Description Create a new restaurant table with number of guests and table number
+// @Tags Table
+// @Accept json
+// @Produce json
+// @Param table body model.TableModel true "Table data (number_of_guests and table_number required)"
+// @Success 200 {object} map[string]interface{} "Table created successfully"
+// @Failure 400 {object} map[string]string "Bad request - validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /table [post]
 func CreateTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -56,6 +66,15 @@ func CreateTable() gin.HandlerFunc {
 	}
 }
 
+// GetTable godoc
+// @Summary Get a specific table
+// @Description Retrieve table details by table ID
+// @Tags Table
+// @Produce json
+// @Param id path string true "Table ID"
+// @Success 200 {object} model.TableModel "Table details"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /table/{id} [get]
 func GetTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -73,6 +92,14 @@ func GetTable() gin.HandlerFunc {
 	}
 }
 
+// GetTables godoc
+// @Summary Get all tables
+// @Description Retrieve a list of all restaurant tables
+// @Tags Table
+// @Produce json
+// @Success 200 {object} []model.TableModel "List of tables"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /tables [get]
 func GetTables() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -93,6 +120,18 @@ func GetTables() gin.HandlerFunc {
 	}
 }
 
+// UpdateTable godoc
+// @Summary Update a table
+// @Description Update table details by table ID
+// @Tags Table
+// @Accept json
+// @Produce json
+// @Param id path string true "Table ID"
+// @Param table body model.TableModel true "Updated table data"
+// @Success 200 {object} map[string]interface{} "Table updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /table/{id} [put]
 func UpdateTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -145,6 +184,15 @@ func UpdateTable() gin.HandlerFunc {
 	}
 }
 
+// DeleteTable godoc
+// @Summary Delete a table
+// @Description Delete a table by table ID
+// @Tags Table
+// @Produce json
+// @Param id path string true "Table ID"
+// @Success 200 {object} map[string]string "Table deleted successfully"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /table/{id} [delete]
 func DeleteTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{

@@ -15,12 +15,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-
+// CreateMenu godoc
+// @Summary Create a new menu
+// @Description Create a new menu item with name and category
+// @Tags Menu
+// @Accept json
+// @Produce json
+// @Param menu body model.MenuModel true "Menu data (name and category required)"
+// @Success 200 {object} map[string]interface{} "Menu created successfully"
+// @Failure 400 {object} map[string]string "Bad request - validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /menu [post]
 func CreateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-        var menuCollection = database.Collection("menus")
+		var menuCollection = database.Collection("menus")
 		var menu model.MenuModel
 		if err := c.BindJSON(&menu); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -48,6 +58,14 @@ func CreateMenu() gin.HandlerFunc {
 	}
 }
 
+// GetMenus godoc
+// @Summary Get all menus
+// @Description Retrieve a list of all menus
+// @Tags Menu
+// @Produce json
+// @Success 200 {object} []model.MenuModel "List of menus"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /menus [get]
 func GetMenus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var _, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -65,6 +83,15 @@ func GetMenus() gin.HandlerFunc {
 	}
 }
 
+// GetMenu godoc
+// @Summary Get a specific menu
+// @Description Retrieve menu details by menu ID
+// @Tags Menu
+// @Produce json
+// @Param id path string true "Menu ID"
+// @Success 200 {object} model.MenuModel "Menu details"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /menu/{id} [get]
 func GetMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -83,10 +110,18 @@ func GetMenu() gin.HandlerFunc {
 	}
 }
 
-func inTimespam(start, end, check time.Time) bool {
-	return start.After(time.Now()) && end.Before(time.Now())
-}
-
+// UpdateMenu godoc
+// @Summary Update a menu
+// @Description Update menu details by menu ID
+// @Tags Menu
+// @Accept json
+// @Produce json
+// @Param id path string true "Menu ID"
+// @Param menu body model.MenuModel true "Updated menu data"
+// @Success 200 {object} map[string]interface{} "Menu updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /menu/{id} [put]
 func UpdateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -143,4 +178,7 @@ func UpdateMenu() gin.HandlerFunc {
 		defer cancel()
 		c.JSON(http.StatusOK, result)
 	}
+}
+func inTimespam(start, end, check time.Time) bool {
+	return start.After(time.Now()) && end.Before(time.Now())
 }

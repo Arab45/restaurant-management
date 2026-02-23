@@ -20,12 +20,22 @@ type OrderItemPack struct {
 	Order_item []model.OrderItemModel
 }
 
-
+// CreateOrderItem godoc
+// @Summary Create order items for an order
+// @Description Create one or more order items associated with an order
+// @Tags OrderItem
+// @Accept json
+// @Produce json
+// @Param orderItemPack body OrderItemPack true "Order items data with table_id and items list"
+// @Success 200 {object} map[string]interface{} "Order items created successfully"
+// @Failure 400 {object} map[string]string "Bad request - validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /orderItem [post]
 func CreateOrderItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-		 var OrderItemCollection = database.Collection("order_items")
+		var OrderItemCollection = database.Collection("order_items")
 		var orderItemPack OrderItemPack
 
 		var order model.OrderModel
@@ -70,6 +80,15 @@ func CreateOrderItem() gin.HandlerFunc {
 
 }
 
+// GetOrderItemByOrder godoc
+// @Summary Get order items by order ID
+// @Description Retrieve all items for a specific order with details (food, table, etc)
+// @Tags OrderItem
+// @Produce json
+// @Param id path string true "Order ID"
+// @Success 200 {object} []map[string]interface{} "List of order items with details"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /orderItem/{id} [get]
 func GetOrderItemByOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		orderId := c.Param("order_id")
@@ -84,11 +103,19 @@ func GetOrderItemByOrder() gin.HandlerFunc {
 	}
 }
 
+// GetOrderItems godoc
+// @Summary Get all order items
+// @Description Retrieve a list of all order items across all orders
+// @Tags OrderItem
+// @Produce json
+// @Success 200 {object} []model.OrderItemModel "List of order items"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /orderItems [get]
 func GetOrderItems() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-		 var OrderItemCollection = database.Collection("order_items")
+		var OrderItemCollection = database.Collection("order_items")
 
 		result, err := OrderItemCollection.Find(context.TODO(), bson.M{})
 
@@ -323,11 +350,23 @@ func ItemByOrder(id string) (orderItems []bson.M, err error) {
 	return orderItems, nil
 }
 
+// UpdateOrderItem godoc
+// @Summary Update an order item
+// @Description Update order item details by order item ID
+// @Tags OrderItem
+// @Accept json
+// @Produce json
+// @Param id path string true "Order Item ID"
+// @Param orderItem body model.OrderItemModel true "Updated order item data"
+// @Success 200 {object} map[string]interface{} "Order item updated successfully"
+// @Failure 400 {object} map[string]string "Bad request"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /orderItem/{id} [put]
 func UpdateOrderItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-		 var OrderItemCollection = database.Collection("order_items")
+		var OrderItemCollection = database.Collection("order_items")
 
 		var orderItem model.OrderItemModel
 
@@ -380,7 +419,7 @@ func GetOrderItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-		 var OrderItemCollection = database.Collection("order_items")
+		var OrderItemCollection = database.Collection("order_items")
 
 		orderItemId := c.Param("order_item_id")
 		var orderItem model.OrderItemModel
