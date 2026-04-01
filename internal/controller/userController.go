@@ -230,6 +230,17 @@ func SignUp() gin.HandlerFunc {
 	}
 }
 
+// LogIn godoc
+// @Summary User login/authentication
+// @Description Authenticate user with email and password, and return access and refresh tokens
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param credentials body model.UserModel true "User login credentials (email and password required)"
+// @Success 200 {object} map[string]interface{} "Login successful with user details and tokens"
+// @Failure 400 {object} map[string]string "Bad request - validation error"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /login [post]
 func LogIn() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
