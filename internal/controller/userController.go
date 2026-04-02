@@ -77,16 +77,15 @@ func GetUsers() gin.HandlerFunc {
 	}
 }
 
-// GetUsers godoc
-// @Summary Get all users with pagination
-// @Description Retrieve a list of all users with pagination support
+// GetUser godoc
+// @Summary Get a specific user by ID
+// @Description Retrieve user details by providing the user ID
 // @Tags User
 // @Produce json
-// @Param recordPerPage query int false "Number of records per page (default: 10)"
-// @Param page query int false "Page number (default: 1)"
-// @Success 200 {object} map[string]interface{} "List of users"
+// @Param id path string true "User ID"
+// @Success 200 {object} model.UserModel "User details"
 // @Failure 500 {object} map[string]string "Internal server error"
-// @Router /users [get]
+// @Router /user/{id} [get]
 func GetUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -106,22 +105,6 @@ func GetUser() gin.HandlerFunc {
 	}
 }
 
-// GetUser godoc
-// @Summary Get a specific user by ID
-// @Description Retrieve user details by providing the user ID
-// @Tags User
-// @Produce json
-// @Param id path string true "User ID"
-// @Success 200 {object} model.UserModel "User details"
-// @Failure 500 {object} map[string]string "Internal server error"
-// @Router /user/{id} [get]
-func UpdateUser() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-
-	}
-}
-
 // UpdateUser godoc
 // @Summary Update user information
 // @Description Update specific user details by user ID
@@ -134,6 +117,12 @@ func UpdateUser() gin.HandlerFunc {
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /user-update/{id} [put]
+func UpdateUser() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+
+	}
+}
 
 // SignUp godoc
 // @Summary User registration/sign up

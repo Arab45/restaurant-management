@@ -74,8 +74,8 @@ func main() {
 	docs.SwaggerInfo.Description = "Restaurant Management System API - Available on both local and online servers"
 	docs.SwaggerInfo.Version = "1.0"
 
-	// Swagger UI - This uses the embedded swagger.json automatically!
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// Swagger UI — load spec from this server (avoids stale/wrong doc URL when host/port differ)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("/swagger/doc.json")))
 
 	// API ROUTES (with auth)
 	apiGroup := router.Group("/api/v1")

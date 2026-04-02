@@ -1248,6 +1248,46 @@ paths:
       summary: User login/authentication
       tags:
       - User
+  /user-update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update specific user details by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated user data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update user information
+      tags:
+      - User
   /user/{id}:
     get:
       description: Retrieve user details by providing the user ID
