@@ -1,11 +1,10 @@
 {
     "schemes": [
-        "http",
-        "https"
+        "http"
     ],
     "swagger": "2.0",
     "info": {
-        "description": "A comprehensive Restaurant Management System API for managing users, menus, food items, orders, tables, invoices, and notes. Available on both local and online servers.",
+        "description": "A comprehensive Restaurant Management System API for managing users, menus, food items, orders, tables, invoices, and notes.",
         "title": "Restaurant Management API",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
@@ -16,17 +15,7 @@
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "version": "1.0",
-        "x-servers": [
-            {
-                "description": "Local Development Server",
-                "url": "http://localhost:3000/api/v1"
-            },
-            {
-                "description": "Online Production Server",
-                "url": "https://restaurant-management-f9kx.onrender.com/api/v1"
-            }
-        ]
+        "version": "1.0"
     },
     "host": "localhost:3000",
     "basePath": "/api/v1",
@@ -1515,6 +1504,58 @@
                 }
             }
         },
+        "/user-login": {
+            "post": {
+                "description": "Authenticate user with email and password, and return access and refresh tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "User login/authentication",
+                "parameters": [
+                    {
+                        "description": "Email and password",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful with user details and tokens",
+                        "schema": {
+                            "$ref": "#/definitions/model.UserModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - validation error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/{id}": {
             "get": {
                 "description": "Retrieve user details by providing the user ID",
@@ -1699,6 +1740,19 @@
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "model.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "yourpassword"
                 }
             }
         },

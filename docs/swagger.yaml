@@ -70,6 +70,15 @@ definitions:
       updated_at:
         type: string
     type: object
+  model.LoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: yourpassword
+        type: string
+    type: object
   model.MenuModel:
     properties:
       category:
@@ -210,19 +219,13 @@ info:
     name: API Support
     url: http://www.swagger.io/support
   description: A comprehensive Restaurant Management System API for managing users,
-    menus, food items, orders, tables, invoices, and notes. Available on both local
-    and online servers.
+    menus, food items, orders, tables, invoices, and notes.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
   title: Restaurant Management API
   version: "1.0"
-  x-servers:
-  - description: Local Development Server
-    url: http://localhost:3000/api/v1
-  - description: Online Production Server
-    url: https://restaurant-management-f9kx.onrender.com/api/v1
 paths:
   /food:
     post:
@@ -1210,6 +1213,41 @@ paths:
       summary: User registration/sign up
       tags:
       - User
+  /user-login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with email and password, and return access and
+        refresh tokens
+      parameters:
+      - description: Email and password
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful with user details and tokens
+          schema:
+            $ref: '#/definitions/model.UserModel'
+        "400":
+          description: Bad request - validation error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login/authentication
+      tags:
+      - User
   /user/{id}:
     get:
       description: Retrieve user details by providing the user ID
@@ -1266,5 +1304,4 @@ paths:
       - User
 schemes:
 - http
-- https
 swagger: "2.0"

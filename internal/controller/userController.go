@@ -236,11 +236,11 @@ func SignUp() gin.HandlerFunc {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param credentials body model.UserModel true "User login credentials (email and password required)"
-// @Success 200 {object} map[string]interface{} "Login successful with user details and tokens"
+// @Param credentials body model.LoginRequest true "Email and password"
+// @Success 200 {object} model.UserModel "Login successful with user details and tokens"
 // @Failure 400 {object} map[string]string "Bad request - validation error"
 // @Failure 500 {object} map[string]string "Internal server error"
-// @Router /login [post]
+// @Router /user-login [post]
 func LogIn() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)

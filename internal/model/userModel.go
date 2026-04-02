@@ -20,3 +20,9 @@ type UserModel struct {
 	Updated_at    time.Time          `json:"updated_at"`
 	User_id       *string            `json:"user_id"`
 }
+
+// LoginRequest is the JSON body for POST /user-login (email and password only).
+type LoginRequest struct {
+	Email    *string `json:"email" example:"user@example.com"`
+	Password *string `json:"password" example:"yourpassword"`
+}
