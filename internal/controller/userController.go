@@ -25,7 +25,6 @@ import (
 // @Param recordPerPage query int false "Number of records per page (default: 10)"
 // @Param page query int false "Page number (default: 1)"
 // @Success 200 {object} map[string]interface{} "List of users"
-// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /users [get]
 func GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -84,7 +83,6 @@ func GetUsers() gin.HandlerFunc {
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} model.UserModel "User details"
-// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /user/{id} [get]
 func GetUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -105,24 +103,6 @@ func GetUser() gin.HandlerFunc {
 	}
 }
 
-// UpdateUser godoc
-// @Summary Update user information
-// @Description Update specific user details by user ID
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param id path string true "User ID"
-// @Param user body model.UserModel true "Updated user data"
-// @Success 200 {object} map[string]interface{} "User updated successfully"
-// @Failure 400 {object} map[string]string "Bad request"
-// @Failure 500 {object} map[string]string "Internal server error"
-// @Router /user-update/{id} [put]
-func UpdateUser() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-
-	}
-}
 
 // SignUp godoc
 // @Summary User registration/sign up
@@ -132,8 +112,6 @@ func UpdateUser() gin.HandlerFunc {
 // @Produce json
 // @Param user body model.UserModel true "User data (first_name, last_name, email, password, phone required)"
 // @Success 200 {object} map[string]interface{} "User created successfully with ID"
-// @Failure 400 {object} map[string]string "Bad request - validation error"
-// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /user [post]
 func SignUp() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -227,8 +205,6 @@ func SignUp() gin.HandlerFunc {
 // @Produce json
 // @Param credentials body model.LoginRequest true "Email and password"
 // @Success 200 {object} model.UserModel "Login successful with user details and tokens"
-// @Failure 400 {object} map[string]string "Bad request - validation error"
-// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /user-login [post]
 func LogIn() gin.HandlerFunc {
 	return func(c *gin.Context) {

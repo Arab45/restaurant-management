@@ -9,7 +9,6 @@ func UserRouter(incomingRouter *gin.RouterGroup){
 	incomingRouter.POST("/user", controller.SignUp())
 	incomingRouter.GET("/users", controller.GetUsers())
 	incomingRouter.GET("/user/:id", controller.GetUser())
-	incomingRouter.PUT("/user-update/:id", controller.UpdateUser())
 	incomingRouter.POST("/user-login", controller.LogIn())
 	// incomingRouter.DELETE("/user-delete/:id", controller.DeleteUser())
 }
