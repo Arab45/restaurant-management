@@ -52,7 +52,7 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
 			"http://localhost:5173",
-			"https://pixelplate-restaurant.vercel.app/",
+			"https://pixelplate-restaurant.vercel.app",
 		},
 		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{

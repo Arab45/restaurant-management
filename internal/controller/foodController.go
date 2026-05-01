@@ -302,9 +302,17 @@ func UpdateFood() gin.HandlerFunc {
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /food-update/{id} [put]
 func DeleteFood(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"result": "Delete Food",
+ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+defer cancel()
+var foodCollection = database.Collection("foods")
+foodId := c.Param("food_id")
+_, err := foodCollection.DeleteOne(ctx, bson.M{"food_id": foodId})
+if err != nil {
+	c.JSON(http.StatusInternalServerError, gin.H{
+		"error": "food item deletion failed",
 	})
+	return
+}
 }
 
 func round(num float64) int {
