@@ -279,6 +279,7 @@ func LogIn() gin.HandlerFunc {
 			true,
 		)
 
+		// Clean user object
 		foundUser.Password = ""
 
 		c.JSON(http.StatusOK, gin.H{
