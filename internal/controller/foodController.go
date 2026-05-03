@@ -32,7 +32,7 @@ func CreateFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-		var menuCollection = database.Collection("menus");
+		var menuCollection = database.Collection("menus")
 		var foodCollection = database.Collection("foods")
 		var food model.FoodModel
 		var menu model.MenuModel
