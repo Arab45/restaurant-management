@@ -290,31 +290,32 @@ func UpdateFood() gin.HandlerFunc {
 	}
 }
 
-// UpdateFood godoc
-// @Summary Update a food item
-// @Description Update food item details by ID
+// DeleteFood godoc
+// @Summary Delete a food item
+// @Description Delete a food item by ID
 // @Tags Food
 // @Accept json
 // @Produce json
 // @Param id path string true "Food ID"
-// @Param food body model.FoodModel true "Updated food data"
-// @Success 200 {object} map[string]interface{} "Food updated successfully"
+// @Success 200 {object} map[string]interface{} "Food deleted successfully"
 // @Failure 400 {object} map[string]string "Bad request"
 // @Failure 404 {object} map[string]string "Food not found"
 // @Failure 500 {object} map[string]string "Internal server error"
-// @Router /food-update/{id} [put]
-func DeleteFood(c *gin.Context) {
-ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
-defer cancel()
-var foodCollection = database.Collection("foods")
-foodId := c.Param("food_id")
-_, err := foodCollection.DeleteOne(ctx, bson.M{"food_id": foodId})
-if err != nil {
-	c.JSON(http.StatusInternalServerError, gin.H{
-		"error": "food item deletion failed",
-	})
-	return
-}
+// @Router /food-delete/{id} [delete]
+func DeleteFood() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
+		var foodCollection = database.Collection("foods")
+		foodId := c.Param("food_id")
+		_, err := foodCollection.DeleteOne(ctx, bson.M{"food_id": foodId})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "food item deletion failed",
+			})
+			return
+		}
+	}
 }
 
 func round(num float64) int {

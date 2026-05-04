@@ -12,4 +12,5 @@ func FoodRouter(incomingRouter *gin.RouterGroup) {
 	incomingRouter.GET("/foods", controller.GetFoods())
 	incomingRouter.GET("/food/:id", controller.GetFood())
 	incomingRouter.PUT("/food-update/:id", controller.UpdateFood())
+	incomingRouter.DELETE("/food-delete/:id", controller.DeleteFood())
 }
