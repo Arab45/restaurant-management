@@ -4,6 +4,7 @@ import (
 	"RESTAURANT-MANAGEMENT/internal/database"
 	"RESTAURANT-MANAGEMENT/internal/model"
 	"context"
+	"log"
 	"math"
 	"net/http"
 	"strconv"
@@ -74,8 +75,9 @@ func CreateFood() gin.HandlerFunc {
 			)
 			return
 		}
+		log.Println(result)
 		defer cancel()
-		c.JSON(http.StatusOK, result)
+		c.JSON(http.StatusOK, food)
 	}
 
 }
