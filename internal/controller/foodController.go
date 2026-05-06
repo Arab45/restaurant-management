@@ -304,17 +304,54 @@ func UpdateFood() gin.HandlerFunc {
 // @Router /food-delete/{id} [delete]
 func DeleteFood() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		// Create context with timeout
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+
+		// Get collection
 		var foodCollection = database.Collection("foods")
+
+		// Get param from URL
 		foodId := c.Param("food_id")
-		_, err := foodCollection.DeleteOne(ctx, bson.M{"food_id": foodId})
+
+		// Validate ObjectId
+		objectId, err := primitive.ObjectIDFromHex(foodId)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "food item deletion failed",
+			c.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"error":   "invalid food id",
 			})
 			return
 		}
+
+		// Delete document
+		result, err := foodCollection.DeleteOne(ctx, bson.M{
+			"_id": objectId,
+		})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"success": false,
+				"error":   "failed to delete food",
+			})
+			return
+		}
+
+		// If nothing was deleted
+		if result.DeletedCount == 0 {
+			c.JSON(http.StatusNotFound, gin.H{
+				"success": false,
+				"error":   "food not found",
+			})
+			return
+		}
+
+		// Success response
+		c.JSON(http.StatusOK, gin.H{
+			"success": true,
+			"message": "food deleted successfully",
+		})
 	}
 }
 
